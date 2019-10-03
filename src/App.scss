@@ -24,20 +24,19 @@ body {
     height: 100%;
 
     .startBtn {
-        border: 4px solid rgba(0, 0, 0, 0);
-        border-radius: 16px;
+        text-transform: uppercase;
+        border-radius: 8px;
         height: 14vw;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 18px;
         font-weight: 700;
-        box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+        box-shadow: 0 -3px 0 0 #2545a8 inset;
         background-color: #6683dd;
         color: #f8f6f9;
         font-size: 32px;
-        padding: 12px;
-        width: 180px;
+        padding: 16px;
+        width: 200px;
     }
 }
 
@@ -55,11 +54,12 @@ body {
 
     .cancelBtn {
         background-color: #575353;
+        box-shadow: 0 -2px 0 0 #393636 inset;
         color: #f8f6f9;
         height: 20px;
         padding: 6px 12px;
         font-size: 15px;
-        border-radius: 5px;
+        border-radius: 8px;
         border: none;
         display: block;
         font: inherit;
@@ -85,6 +85,14 @@ body {
     font-size: 72px;
     text-shadow: 3px 4px 0px rgba(0,0,0,0.3);
     transition: all 0.2s ease;
+
+    .displayLetter.show {
+        transition: all 0.2s linear;
+
+        &.show {
+            transition: all 0.3s ease;
+        }
+    }
 }
 
 .btnRow {
@@ -95,7 +103,7 @@ body {
     margin: 24px 0;
 
     .matchBtn {
-        border-radius: 16px;
+        border-radius: 8px;
         height: 14vw;
         display: flex;
         align-items: center;
@@ -108,7 +116,7 @@ body {
 
     .matchBtn:hover {
         background-color: #6683dd;
-        box-shadow: 0 -1px 0 0 #2545a8 inset;
+        box-shadow: 0 -2px 0 0 #2545a8 inset;
         color: #f8f6f9;
     }
 }
@@ -119,6 +127,7 @@ body {
     height: 8px;
     border-radius: 4px;
     background-color: #ccc9c9;
+    box-shadow: 0 -1px 0 0 #b9b5b5 inset;
 
     .progress {
         border-radius: 4px;
@@ -129,6 +138,7 @@ body {
 
     .progress.loading {
         transition: width 0.3s linear;
+        box-shadow: 0 -1px 0 0 #1e3888 inset;
     }
 }
 

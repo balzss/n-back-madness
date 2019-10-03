@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700&display=swap');
 
+$grid-width: calc(84vw + 24px);
+
 html, body, #root, .App {
     height: 100%;
 }
@@ -39,6 +41,15 @@ body {
         width: 200px;
     }
 }
+
+.statsScreen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    width: $grid-width;
+}
+
 
 .counter {
     font-weight: 700;
@@ -114,7 +125,7 @@ body {
         box-shadow: 0 -3px 0 0 #ccc9c9 inset;
     }
 
-    .matchBtn:hover {
+    .matchBtn.active {
         background-color: #6683dd;
         box-shadow: 0 -2px 0 0 #2545a8 inset;
         color: #f8f6f9;

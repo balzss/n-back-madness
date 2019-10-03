@@ -8,9 +8,12 @@ class App extends React.Component {
         this.state = {
             screen: 'start',
             series: [],
+            answers: [],
             progressInterval: null,
             progress: 0,
-            questionNo: 1
+            questionNo: 1,
+            positionMatch: false,
+            letterMatch: false
         };
 
         this.testLength = 6;
@@ -33,11 +36,19 @@ class App extends React.Component {
         const startLetter = String.fromCharCode(65 + Math.floor(Math.random() * 25));
         const startPos = Math.floor(Math.random() * 9);
 
-        this.setState({screen: 'test', questionNo: 1, series: [{letter: startLetter, pos: startPos}]}, () => {
+        this.setState({screen: 'test', questionNo: 1, series: [{letter: startLetter, pos: startPos}], answers: []}, () => {
             setTimeout(() => {
                 this.setState({progressInterval: setInterval(progressIntervalFn, 300)});
             }, 50);
         });
+    }
+
+    handleLetterMatchBtn = () => {
+        this.setState({letterMatch: !this.state.letterMatch});
+    }
+
+    handlePositionMatchBtn = () => {
+        this.setState({positionMatch: !this.state.positionMatch});
     }
 
     handleRoundChange = () => {
@@ -47,8 +58,11 @@ class App extends React.Component {
         }
         const newLetter = String.fromCharCode(65 + Math.floor(Math.random() * 25));
         const newPos = Math.floor(Math.random() * 9);
+
         const newSeries = this.state.series.concat({letter: newLetter, pos: newPos});
-        this.setState({series: newSeries, questionNo: this.state.questionNo + 1});
+        const newAnswers = this.state.answers.concat({letter: this.state.letterMatch, pos: this.state.positionMatch});
+
+        this.setState({series: newSeries, questionNo: this.state.questionNo + 1, positionMatch: false, letterMatch: false, answers: newAnswers});
     }
 
     handleStopRound = () => {
@@ -86,6 +100,8 @@ class App extends React.Component {
     }
 
     renderTestScreen() {
+        const letterMatchClasses = 'matchBtn' + (this.state.letterMatch ? ' active' : '');
+        const positionMatchClasses = 'matchBtn' + (this.state.positionMatch ? ' active' : '');
         return (
             <div className="testScreen">
                 <div className="counter">
@@ -94,8 +110,8 @@ class App extends React.Component {
                 </div>
                 { this.renderBoard() }
                 <div className="btnRow">
-                    <div className="matchBtn">Letter match</div>
-                    <div className="matchBtn selected">Position match</div>
+                    <div className={letterMatchClasses} onClick={this.handleLetterMatchBtn}>Letter match</div>
+                    <div className={positionMatchClasses} onClick={this.handlePositionMatchBtn}>Position match</div>
                 </div>
                 <div className="progressBarHolder">
                     <div className={"progress" + (this.state.progress < 1 && this.state.progress > 0 ? " loading" : "")} style={{width: 'calc((84vw + 24px) * ' + this.state.progress + ')'}}></div>
@@ -107,9 +123,11 @@ class App extends React.Component {
 
     renderStatsScreen() {
         return (
-            <div className="homeScreen">
-                <div>Stats screen</div>
+            <div className="statsScreen">
+                <h1>Series:</h1>
                 <div>{ JSON.stringify(this.state.series) }</div>
+                <h1>Answers:</h1>
+                <div>{ JSON.stringify(this.state.answers) }</div>
             </div>
         );
     }

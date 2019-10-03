@@ -10,27 +10,33 @@ class App extends React.Component {
             pos: 3,
             letter: 'A',
             roundInterval: null,
-            progress: false
+            progressInterval: null,
+            progress: 0
         };
     }
 
     handleCancelBtn = () => {
-        clearInterval(this.state.roundInterval);
+        clearInterval(this.state.progressInterval);
         this.setState({inTestMode: false, roundInterval: null});
     }
 
     handleStartBtn = () => {
-        this.setState({progress: true, inTestMode: true, roundInterval: setInterval(this.handleRoundChange, 3000)});
+        const progressIntervalFn = () => {
+            if (this.state.progress >= 0.9) {
+                this.setState({progress: 0});
+                this.handleRoundChange();
+            } else {
+                this.setState({progress: this.state.progress + 0.1});
+                console.log(this.state.progress);
+            }
+        };
+        this.setState({progress: true, inTestMode: true, progressInterval: setInterval(progressIntervalFn, 300)});
     }
 
     handleRoundChange = () => {
         const newLetter = String.fromCharCode(65 + Math.floor(Math.random() * 25));
         const newPos = Math.floor(Math.random() * 9);
-        this.setState({letter: newLetter, pos: newPos, progress: true}, () => {
-            setTimeout(() => {
-                this.setState({progress: false});
-            }, 2900);
-        });
+        this.setState({letter: newLetter, pos: newPos});
     }
 
     renderBoard() {
@@ -71,7 +77,7 @@ class App extends React.Component {
                     <div className="matchBtn selected">Position match</div>
                 </div>
                 <div className="progressBarHolder">
-                    <div className={'progress' + (this.state.progress ? ' loaded' : '')}></div>
+                    <div className={"progress" + (this.state.progress < 1 && this.state.progress > 0 ? " loading" : "")} style={{width: 'calc((84vw + 24px) * ' + this.state.progress + ')'}}></div>
                 </div>
                 <div className="pager"> 13/24 </div>
             </div>

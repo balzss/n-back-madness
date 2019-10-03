@@ -83,7 +83,7 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 72px;
-    text-shadow: 4px 4px 0px rgba(0,0,0,0.3);
+    text-shadow: 3px 4px 0px rgba(0,0,0,0.3);
     transition: all 0.2s ease;
 }
 
@@ -95,7 +95,6 @@ body {
     margin: 24px 0;
 
     .matchBtn {
-        border: 4px solid rgba(0, 0, 0, 0);
         border-radius: 16px;
         height: 14vw;
         display: flex;
@@ -104,11 +103,12 @@ body {
         font-size: 18px;
         font-weight: 700;
         background-color: #f8f6f9;
-        box-shadow: 0px 1px 1px rgba(0,0,0,0.2);
+        box-shadow: 0 -3px 0 0 #ccc9c9 inset;
     }
 
     .matchBtn:hover {
         background-color: #6683dd;
+        box-shadow: 0 -1px 0 0 #2545a8 inset;
         color: #f8f6f9;
     }
 }
@@ -123,14 +123,12 @@ body {
     .progress {
         border-radius: 4px;
         position: absolute;
-        width: 0vw;
         background-color: #2545a8;
         height: 100%;
     }
 
-    .progress.loaded {
-        width: calc(84vw + 24px);
-        transition: width 2.85s linear;
+    .progress.loading {
+        transition: width 0.3s linear;
     }
 }
 

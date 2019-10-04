@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/n-back-madness/static/css/main.0e5f0148.chunk.css",
+    "main.css": "/n-back-madness/static/css/main.2b450fcd.chunk.css",
     "main.js": "/n-back-madness/static/js/main.c177e0d4.chunk.js",
     "main.js.map": "/n-back-madness/static/js/main.c177e0d4.chunk.js.map",
     "runtime-main.js": "/n-back-madness/static/js/runtime-main.5b04c2da.js",
@@ -8,8 +8,8 @@
     "static/js/2.e9fb98f0.chunk.js": "/n-back-madness/static/js/2.e9fb98f0.chunk.js",
     "static/js/2.e9fb98f0.chunk.js.map": "/n-back-madness/static/js/2.e9fb98f0.chunk.js.map",
     "index.html": "/n-back-madness/index.html",
-    "precache-manifest.4d7d448285d9707243aa1f588313f0a4.js": "/n-back-madness/precache-manifest.4d7d448285d9707243aa1f588313f0a4.js",
+    "precache-manifest.a31d2ecc288e1eab7ed8301ca51c71f3.js": "/n-back-madness/precache-manifest.a31d2ecc288e1eab7ed8301ca51c71f3.js",
     "service-worker.js": "/n-back-madness/service-worker.js",
-    "static/css/main.0e5f0148.chunk.css.map": "/n-back-madness/static/css/main.0e5f0148.chunk.css.map"
+    "static/css/main.2b450fcd.chunk.css.map": "/n-back-madness/static/css/main.2b450fcd.chunk.css.map"
   }
 }

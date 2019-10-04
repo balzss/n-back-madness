@@ -43,11 +43,13 @@ class App extends React.Component {
         });
     }
 
-    handleLetterMatchBtn = () => {
+    handleLetterMatchBtn = e => {
+        e.preventDefault();
         this.setState({letterMatch: !this.state.letterMatch});
     }
 
-    handlePositionMatchBtn = () => {
+    handlePositionMatchBtn = e => {
+        e.preventDefault();
         this.setState({positionMatch: !this.state.positionMatch});
     }
 
@@ -110,8 +112,8 @@ class App extends React.Component {
                 </div>
                 { this.renderBoard() }
                 <div className="btnRow">
-                    <div className={letterMatchClasses} onClick={this.handleLetterMatchBtn}>Letter match</div>
-                    <div className={positionMatchClasses} onClick={this.handlePositionMatchBtn}>Position match</div>
+                    <div className={letterMatchClasses} onTouchStart={this.handleLetterMatchBtn} onClick={this.handleLetterMatchBtn}>Letter match</div>
+                    <div className={positionMatchClasses} onTouchStart={this.handlePositionMatchBtn} onClick={this.handlePositionMatchBtn}>Position match</div>
                 </div>
                 <div className="progressBarHolder">
                     <div className={"progress" + (this.state.progress < 1 && this.state.progress > 0 ? " loading" : "")} style={{width: 'calc((84vw + 24px) * ' + this.state.progress + ')'}}></div>

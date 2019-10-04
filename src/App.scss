@@ -105,8 +105,8 @@ body {
         border: none;
         display: block;
         font: inherit;
-        box-sizing: inherit;
         line-height: 1;
+        box-sizing: content-box;
     }
 }
 

@@ -13,7 +13,8 @@ class App extends React.Component {
             progress: 0,
             questionNo: 1,
             positionMatch: false,
-            letterMatch: false
+            letterMatch: false,
+            nBack: 1
         };
 
         this.testLength = 6;
@@ -44,13 +45,19 @@ class App extends React.Component {
     }
 
     handleLetterMatchBtn = e => {
-        e.preventDefault();
         this.setState({letterMatch: !this.state.letterMatch});
     }
 
     handlePositionMatchBtn = e => {
-        e.preventDefault();
         this.setState({positionMatch: !this.state.positionMatch});
+    }
+
+    handleIncreaseNBack = e => {
+        this.setState({nBack: Math.min(Math.floor(this.testLength / 2), this.state.nBack + 1)});
+    }
+
+    handleDecreaseNBack = e => {
+        this.setState({nBack: Math.max(1, this.state.nBack - 1)});
     }
 
     handleRoundChange = () => {
@@ -97,6 +104,13 @@ class App extends React.Component {
         return (
             <div className="homeScreen">
                 <div className="startBtn" onClick={this.handleStartBtn}>Start</div>
+                <div className="modeSelector">
+                    <div className="menuItem" onTouchStart={this.handleDecreaseNBack}><i className="fas fa-caret-left"></i></div>
+                    <div className="menuItem nBack">{ this.state.nBack } Back</div>
+                    <div className="menuItem rightBtn" onTouchStart={this.handleIncreaseNBack}><i className="fas fa-caret-right"></i></div>
+                </div>
+                <div className="menuItem">How to play</div>
+                <div className="menuItem">About</div>
             </div>
         );
     }
@@ -112,8 +126,8 @@ class App extends React.Component {
                 </div>
                 { this.renderBoard() }
                 <div className="btnRow">
-                    <div className={letterMatchClasses} onTouchStart={this.handleLetterMatchBtn} onClick={this.handleLetterMatchBtn}>Letter match</div>
-                    <div className={positionMatchClasses} onTouchStart={this.handlePositionMatchBtn} onClick={this.handlePositionMatchBtn}>Position match</div>
+                    <div className={letterMatchClasses} onTouchStart={this.handleLetterMatchBtn}>Letter match</div>
+                    <div className={positionMatchClasses} onTouchStart={this.handlePositionMatchBtn}>Position match</div>
                 </div>
                 <div className="progressBarHolder">
                     <div className={"progress" + (this.state.progress < 1 && this.state.progress > 0 ? " loading" : "")} style={{width: 'calc((84vw + 24px) * ' + this.state.progress + ')'}}></div>

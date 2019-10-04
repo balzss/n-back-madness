@@ -4,7 +4,13 @@ $grid-width: calc(84vw + 24px);
 
 html, body, #root, .App {
     height: 100%;
+    box-sizing: border-box;
 }
+
+*, *:before, *:after {
+    box-sizing: inherit;
+}
+
 
 body {
     background: #e6dee9;
@@ -24,21 +30,46 @@ body {
     flex-direction: column;
     justify-content: center;
     height: 100%;
+    width: 100%;
+    padding: 52px;
+    font-weight: 700;
 
     .startBtn {
         text-transform: uppercase;
         border-radius: 8px;
-        height: 14vw;
+        height: 21vw;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
         box-shadow: 0 -3px 0 0 #2545a8 inset;
         background-color: #6683dd;
         color: #f8f6f9;
         font-size: 32px;
         padding: 16px;
-        width: 200px;
+    }
+
+    .menuItem {
+        background-color: #575353;
+        box-shadow: 0 -3px 0 0 #393636 inset;
+        color: #f8f6f9;
+        padding: 16px;
+        border-radius: 8px;
+        box-sizing: inherit;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        margin-top: 12px;
+        text-transform: uppercase;
+    }
+
+    .modeSelector {
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+        grid-gap: 12px;
+        width: 100%;
+        font-size: 28px;
     }
 }
 

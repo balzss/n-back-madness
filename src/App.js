@@ -28,30 +28,49 @@ class App extends React.Component {
         return 'matchBtn' + (initialRounds ? ' disabled' : (match ? ' active' : ''));
     }
 
+    getRandomInt(offset, length, leaveOutNum = false) {
+        return offset + Math.floor(
+            leaveOutNum
+                ? (leaveOutNum + 1 + (Math.random() * (length - 1))) % length
+                : Math.floor(Math.random() * length)
+        );
+    }
+
+    getRandomQuestion(series, nBack, questionNo) {
+        const initQuestion = questionNo < nBack;
+        let letter, pos;
+
+        if (initQuestion) {
+            letter = String.fromCharCode(this.getRandomInt(65, 25));
+            pos = this.getRandomInt(0, 9);
+        } else {
+            const showLastLetter = (Math.random() * 100) < 29.3;
+            const showLastPos = (Math.random() * 100) < 29.3;
+            const lastLetter = showLastLetter && series.slice(-nBack)[0].letter;
+            const lastPos = showLastPos && series.slice(-nBack)[0].pos;
+            letter = lastLetter ? lastLetter : String.fromCharCode(this.getRandomInt(65, 25, lastLetter));
+            pos = lastPos ? lastPos : this.getRandomInt(0, 9, lastPos);
+        }
+
+        return {letter, pos};
+    }
+
+    calculateScore(series, positionMatch, letterMatch) {
+        const prevState = series.slice(-1 - this.state.nBack)[0];
+        const currState = series.slice(-1)[0];
+        const posSame = prevState.pos === currState.pos;
+        const posScore = positionMatch === posSame;
+        const letterSame = prevState.letter === currState.letter;
+        const letterScore = letterMatch === letterSame;
+        return {pos: posScore, letter: letterScore};
+    }
+
     handleCancelBtn = () => {
         this.handleStopRound();
     }
 
     handleStartTouchStart = e => {
         e.target.classList.add('active');
-    }
-
-    handleStartBtn = e => {
-        e.target.classList.remove('active');
-        const progressIntervalFn = () => {
-            this.handleRoundChange();
-        };
-
-        const startLetter = String.fromCharCode(65 + Math.floor(Math.random() * 25));
-        const startPos = Math.floor(Math.random() * 9);
-
-        this.setState({screen: 'test', questionNo: 1, series: [{letter: startLetter, pos: startPos}], answers: [], scores: [], progressInterval: setInterval(progressIntervalFn, this.singleQuestionTime)}, () => {
-            this.progress = new Line('.progressBar', {
-                duration: this.singleQuestionTime,
-                color: '#2545a8'
-            });
-            this.progress.animate(1);
-        });
     }
 
     handleLetterMatchBtn = e => {
@@ -76,14 +95,31 @@ class App extends React.Component {
         this.setState({nBack: Math.max(1, this.state.nBack - 1)});
     }
 
-    calculateScore(series, positionMatch, letterMatch) {
-        const prevState = series.slice(-1 - this.state.nBack)[0];
-        const currState = series.slice(-1)[0];
-        const posSame = prevState.pos === currState.pos;
-        const posScore = positionMatch === posSame;
-        const letterSame = prevState.letter === currState.letter;
-        const letterScore = letterMatch === letterSame;
-        return {pos: posScore, letter: letterScore};
+    handleItemTouchStart = e => {
+        e.target.classList.add('active');
+    }
+
+    handleItemTouchEnd = e => {
+        e.target.classList.remove('active');
+    }
+
+    handleMenuClick = e => {
+        this.setState({screen: 'start'});
+    }
+
+    handleStartRound = e => {
+        e.target.classList.remove('active');
+        const progressIntervalFn = () => {
+            this.handleRoundChange();
+        };
+
+        this.setState({screen: 'test', questionNo: 1, series: [this.getRandomQuestion([], this.state.nBack, 0)], answers: [], scores: [], progressInterval: setInterval(progressIntervalFn, this.singleQuestionTime)}, () => {
+            this.progress = new Line('.progressBar', {
+                duration: this.singleQuestionTime,
+                color: '#2545a8'
+            });
+            this.progress.animate(1);
+        });
     }
 
     handleRoundChange = () => {
@@ -100,10 +136,7 @@ class App extends React.Component {
             : this.calculateScore(this.state.series, this.state.positionMatch, this.state.letterMatch);
         const newScores = this.state.scores.concat(newScore);
 
-        const newLetter = String.fromCharCode(65 + Math.floor(Math.random() * 25));
-        const newPos = Math.floor(Math.random() * 9);
-
-        const newSeries = this.state.series.concat({letter: newLetter, pos: newPos});
+        const newSeries = this.state.series.concat(this.getRandomQuestion(this.state.series, this.state.nBack, this.state.questionNo));
         const newAnswers = this.state.answers.concat({letter: this.state.letterMatch, pos: this.state.positionMatch});
 
         this.setState({series: newSeries, questionNo: this.state.questionNo + 1, positionMatch: false, letterMatch: false, answers: newAnswers, scores: newScores});
@@ -116,18 +149,6 @@ class App extends React.Component {
 
         clearInterval(this.state.progressInterval);
         this.setState({screen: 'stats', progressInterval: null, scores: newScores});
-    }
-
-    handleItemTouchStart = e => {
-        e.target.classList.add('active');
-    }
-
-    handleItemTouchEnd = e => {
-        e.target.classList.remove('active');
-    }
-
-    handleMenuClick = e => {
-        this.setState({screen: 'start'});
     }
 
     renderBoard() {
@@ -167,7 +188,7 @@ class App extends React.Component {
                         <div className="menuItem">{ this.state.nBack } Back</div>
                         <div className={increaseClasses} onTouchStart={this.handleItemTouchStart} onTouchEnd={this.handleIncreaseNBack}><i className="fas fa-caret-right"></i></div>
                     </div>
-                    <div className="startBtn" onTouchStart={this.handleStartTouchStart} onTouchEnd={this.handleStartBtn}>Start</div>
+                    <div className="startBtn" onTouchStart={this.handleStartTouchStart} onTouchEnd={this.handleStartRound}>Start</div>
                 </div>
             </div>
         );
@@ -198,30 +219,43 @@ class App extends React.Component {
     }
 
     renderStatsScreen() {
-        const posScores = this.state.scores.reduce((acc, curr) => curr.pos ? acc + 1 : acc, 0);
-        const letterScores = this.state.scores.reduce((acc, curr) => curr.letter ? acc + 1 : acc, 0);
-        const combinedScores = this.state.scores.reduce((acc, curr) => curr.letter && curr.pos ? acc + 1 : acc, 0);
+        const posScores = this.state.scores.slice(1, -1).reduce((acc, curr) => curr.pos ? acc + 1 : acc, 0);
+        const letterScores = this.state.scores.slice(1, -1).reduce((acc, curr) => curr.letter ? acc + 1 : acc, 0);
+        const combinedScores = this.state.scores.slice(1, -1).reduce((acc, curr) => curr.letter && curr.pos ? acc + 1 : acc, 0);
         return (
             <div className="statsScreen">
+                <h2>Game info:</h2>
+                <table>
+                    <tbody>
+                        <tr>
+                            <th>N-Back</th>
+                            <td>{this.state.nBack}</td>
+                        </tr>
+                        <tr>
+                            <th>Rounds completed</th>
+                            <td>{this.state.questionNo - 1}</td>
+                        </tr>
+                    </tbody>
+                </table>
                 <h2>Success rates:</h2>
                 <table>
                     <tbody>
                         <tr>
                             <th>Position matched</th>
-                            <td>{Math.round((posScores / (this.testLength - 1)) * 100)}%</td>
+                            <td>{Math.round((posScores / (this.state.questionNo - 2)) * 100)}%</td>
                         </tr>
                         <tr>
                             <th>Letter matched</th>
-                            <td>{Math.round((letterScores / (this.testLength - 1)) * 100)}%</td>
+                            <td>{Math.round((letterScores / (this.state.questionNo - 2)) * 100)}%</td>
                         </tr>
                         <tr>
                             <th>Both matched</th>
-                            <td>{Math.round((combinedScores / (this.testLength - 1)) * 100)}%</td>
+                            <td>{Math.round((combinedScores / (this.state.questionNo - 2)) * 100)}%</td>
                         </tr>
                     </tbody>
                 </table>
                 <div className="backHomeBtn" onClick={this.handleMenuClick}>Main menu</div>
-                <div className="retryBtn" onClick={this.handleStartBtn}>Retry</div>
+                <div className="retryBtn" onClick={this.handleStartRound}>Retry</div>
             </div>
         );
     }

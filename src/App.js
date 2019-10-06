@@ -173,7 +173,7 @@ class App extends React.Component {
 
     renderStartScreen() {
         const decreaseClasses = 'menuItem' + (this.state.nBack === 1 ? ' disabled' : '');
-        const increaseClasses = 'menuItem' + (this.state.nBack >= Math.round(this.testLength / 2) ? ' disabled' : '');
+        const increaseClasses = 'menuItem' + (this.state.nBack >= Math.floor(this.testLength / 2) ? ' disabled' : '');
         return (
             <div className="homeScreen">
                 <div className="header">
@@ -233,7 +233,7 @@ class App extends React.Component {
                         </tr>
                         <tr>
                             <th>Rounds completed</th>
-                            <td>{this.state.questionNo - 1}</td>
+                            <td>{Math.max(0, this.state.questionNo - 2)}</td>
                         </tr>
                     </tbody>
                 </table>

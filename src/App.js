@@ -1,11 +1,22 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { setViewState, VIEW_STATES } from './actions';
+import HomeView from './views/HomeView';
+import GameView from './views/GameView';
+import StatsView from './views/StatsView';
+
 import { Line } from 'progressbar.js';
 
+import 'normalize.css';
 import './App.scss';
 
+const mapStateToProps = state => ({
+    viewState: state.viewState
+});
+
 class App extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             screen: 'start',
@@ -16,7 +27,7 @@ class App extends React.Component {
             questionNo: 1,
             positionMatch: false,
             letterMatch: false,
-            nBack: 1
+            nBack: 2
         };
 
         this.testLength = 21;
@@ -86,12 +97,12 @@ class App extends React.Component {
     }
 
     handleIncreaseNBack = e => {
-        e.target.classList.remove('active');
+        this.props.dispatch(setViewState('GAME_VIEW'));
         this.setState({nBack: Math.min(Math.floor(this.testLength / 2), this.state.nBack + 1)});
     }
 
     handleDecreaseNBack = e => {
-        e.target.classList.remove('active');
+        console.log(this.props);
         this.setState({nBack: Math.max(1, this.state.nBack - 1)});
     }
 
@@ -172,23 +183,27 @@ class App extends React.Component {
     }
 
     renderStartScreen() {
-        const decreaseClasses = 'menuItem' + (this.state.nBack === 1 ? ' disabled' : '');
-        const increaseClasses = 'menuItem' + (this.state.nBack >= Math.floor(this.testLength / 2) ? ' disabled' : '');
+        const decreaseDisabled = this.state.nBack <= 1;
+        const increaseDisabled = this.state.nBack >= Math.floor(this.testLength / 2);
         return (
             <div className="homeScreen">
-                <div className="header">
+                <header>
                     <h1>Dual N-Back</h1>
-                </div>
+                </header>
                 <div className="menuItems">
                     <div className="menuItem">How to play</div>
                     <div className="menuItem">Options</div>
                     <div className="menuItem">Statistics</div>
                     <div className="modeSelector">
-                        <div className={decreaseClasses} onTouchStart={this.handleItemTouchStart} onTouchEnd={this.handleDecreaseNBack}><i className="fas fa-caret-left"></i></div>
+                        <button className="menuItem" onClick={this.handleDecreaseNBack} disabled={decreaseDisabled}>
+                            <i className="fas fa-caret-left"></i>
+                        </button>
                         <div className="menuItem">{ this.state.nBack } Back</div>
-                        <div className={increaseClasses} onTouchStart={this.handleItemTouchStart} onTouchEnd={this.handleIncreaseNBack}><i className="fas fa-caret-right"></i></div>
+                        <button className="menuItem" onClick={this.handleIncreaseNBack} disabled={increaseDisabled}>
+                            <i className="fas fa-caret-right"></i>
+                        </button>
                     </div>
-                    <div className="startBtn" onTouchStart={this.handleStartTouchStart} onTouchEnd={this.handleStartRound}>Start</div>
+                    <button className="startBtn" onClick={this.handleStartRound}>Start</button>
                 </div>
             </div>
         );
@@ -199,10 +214,10 @@ class App extends React.Component {
         const positionMatchClasses = this.getMatchBtnClasses(this.state.questionNo, this.state.nBack, this.state.positionMatch);
         return (
             <div className="gameScreen">
-                <div className="gameHeader">
-                    <div className="title">Dual {this.state.nBack} Back</div>
+                <header className="gameHeader">
+                    <h1>Dual {this.state.nBack} Back</h1>
                     <button className="cancelBtn" onClick={this.handleCancelBtn}>Cancel</button>
-                </div>
+                </header>
                 <div className="boardContainer">
                     { this.renderBoard() }
                 </div>
@@ -270,12 +285,19 @@ class App extends React.Component {
     }
 
     render() {
-        return (
-            <div className="App">
-                { this.renderScreen() }
-            </div>
-        );
+        const { viewState } = this.props;
+        const { HOME_VIEW, GAME_VIEW, STATS_VIEW } = VIEW_STATES;
+        switch (viewState) {
+            case HOME_VIEW:
+                return <HomeView/>;
+            case GAME_VIEW:
+                return <GameView/>;
+            case STATS_VIEW:
+                return <StatsView/>;
+            default:
+                return <div>Unknown viewState...</div>
+        }
     }
 }
 
-export default App;
+export default connect(mapStateToProps)(App);

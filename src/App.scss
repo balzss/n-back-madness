@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Slab:400,700&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Bungee&display=swap');
 
+html {
+    touch-action: manipulation;
+}
+
 html, body, #root, .App {
     height: 100%;
     box-sizing: border-box;
@@ -8,6 +12,10 @@ html, body, #root, .App {
 
 *, *:before, *:after {
     box-sizing: inherit;
+}
+
+button {
+    all: unset;
 }
 
 
@@ -37,7 +45,7 @@ body {
     font-weight: 700;
     align-items: center;
 
-    .header {
+    header {
         width: 100%;
         height: 104px;
         background-color: #826090;
@@ -66,7 +74,6 @@ body {
        .startBtn {
             text-transform: uppercase;
             border-radius: 8px;
-            height: 72px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -74,10 +81,10 @@ body {
             background-color: #6683dd;
             color: #f8f6f9;
             font-size: 32px;
-            padding: 16px;
+            padding: 20px;
             margin-top: auto;
 
-            &.active {
+            &:active {
                 background-color: #4669d6;
                 box-shadow: 0 -2px 0 0 #1e3888 inset;
             }
@@ -97,13 +104,12 @@ body {
             font-size: 20px;
             margin-top: 12px;
             text-transform: uppercase;
-            transition: all 0.1s ease;
 
-            &.disabled {
+            &:disabled {
                 opacity: 0.6;
             }
 
-            &.active {
+            &:active {
                 background-color: #2f2d2d;
                 box-shadow: 0 -2px 0 0 #1b1a1a inset;
             }
@@ -115,6 +121,19 @@ body {
             grid-gap: 12px;
             width: 100%;
             font-size: 28px;
+        }
+
+        .gameInfo {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            bottom: 0;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0.5;
+            font-weight: normal;
         }
     }
 }
@@ -226,8 +245,10 @@ body {
         align-items: center;
         width: 100%;
 
-        .title {
+        h1 {
             font-size: 28px;
+            margin: 0;
+            line-height: 1;
         }
 
         .cancelBtn {
@@ -236,11 +257,7 @@ body {
             color: #f8f6f9;
             height: 32px;
             padding: 0 12px;
-            font-size: 15px;
             border-radius: 8px;
-            border: none;
-            font: inherit;
-            line-height: 1;
             display: flex;
             align-items: center;
         }
@@ -322,7 +339,7 @@ body {
         }
     }
 
-    .btnRow {
+    .matchBtnRow {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -330,25 +347,30 @@ body {
         margin-top: 32px;
 
         .matchBtn {
-            border-radius: 8px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            font-weight: 700;
-            background-color: #f8f6f9;
-            box-shadow: 0 -3px 0 0 #ccc9c9 inset;
+            span {
+                border-radius: 8px;
+                height: 52px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                font-weight: 700;
+                background-color: #f8f6f9;
+                box-shadow: 0 -3px 0 0 #ccc9c9 inset;
+            }
+            input {
+                display: none;
+                &:checked + span {
+                    background-color: #6683dd;
+                    box-shadow: 0 -2px 0 0 #2545a8 inset;
+                    color: #f8f6f9;
+                }
 
-            &.active {
-                background-color: #6683dd;
-                box-shadow: 0 -2px 0 0 #2545a8 inset;
-                color: #f8f6f9;
+                &:disabled + span{
+                    opacity: 0.5;
+                }
             }
 
-            &.disabled {
-                opacity: 0.5;
-            }
         }
     }
 
